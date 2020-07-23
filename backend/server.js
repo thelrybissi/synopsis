@@ -1,7 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
+app.use(express.json());
+app.use(cors());
 
 //Conexão com Banco de Dados no Heroku
 mongoose.connect("mongodb://heroku_n6hvm46p:thelry1987@ds029803.mlab.com:29803/heroku_n6hvm46p", { useNewUrlParser: true });
@@ -9,21 +12,8 @@ mongoose.connect("mongodb://heroku_n6hvm46p:thelry1987@ds029803.mlab.com:29803/h
 // Importação do Model
 require('./src/models/Movie');
 
-const Movie = mongoose.model('Movie')
-
 // Rotas
-app.get('/', (req, res) => {
-
-    Movie.create({
-            title: 'Matrix',
-            synopsis: 'A young programmer discovery the real world is destroyed in the pass',
-            gender: 'Fiction and Adventure',
-            duration: 120,
-            premiere: '20/05/2009'
-    });
-
-    return res.send('Welcome Synopsis Movies')
-});
+app.use('/api', require('./src/routes'));
 
 
 const PORT = process.env.PORT || 3000
